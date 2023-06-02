@@ -18,6 +18,7 @@ export const theme = extendTheme({
         color: 'hsl(0, 0%, 59%)',
         fontSize: '10px',
         fontWeight: '700',
+        letterSpacing: '2px'
       },
       p : {
         fontWeight: '500',
@@ -28,6 +29,12 @@ export const theme = extendTheme({
         background: 'black',
         height: 'inherit',
         width:'100%',
+      },
+      '.boxInfos': {
+        marginRight: '80px',
+        marginLeft: '20px',
+        borderLeft: '1px solid hsl(0, 0%, 59%, 0.41)',
+        paddingLeft: '20px'
       }
     }
   }
