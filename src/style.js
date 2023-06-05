@@ -31,10 +31,11 @@ export const theme = extendTheme({
         width:'100%',
       },
       '.boxInfos': {
-        marginRight: '80px',
-        marginLeft: '20px',
         borderLeft: '1px solid hsl(0, 0%, 59%, 0.41)',
         paddingLeft: '20px'
+      },
+      form: {
+        width: '60%',
       }
     }
   }
