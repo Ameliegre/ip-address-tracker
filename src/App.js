@@ -2,7 +2,7 @@ import { Image, Input, Flex, InputRightElement, InputGroup, Box, FormLabel } fro
 import patternDesktop from './images/pattern-bg-desktop.png'
 import iconBtn from './images/icon-arrow.svg'
 import axios from 'axios'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 const IP_REGEX = /^(?:\d{1,3}\.){3}\d{1,3}$/;
 
@@ -11,6 +11,20 @@ function App() {
   const [ipCode, setIpCode] = useState('')
   const [ipInfos, setIpInfos] = useState('')
 
+  const getIP = async () => {
+      try {
+        const response = await axios.get(`http://ip-api.com/json/${ipCode}?fields=status,message,continent,region,city,zip,timezone,offset,isp,query`);
+        setIpInfos(response.data)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+
+  useEffect(() => {
+    getIP()
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault()
     const ipResult = IP_REGEX.test(ipCode)
@@ -18,22 +32,10 @@ function App() {
     if (!ipResult){
       return
     }
-
-    const getIP = async () => {
-      try {
-        const response = await axios.get(`https://geo.ipify.org/api/v2/country,city?apiKey=at_L2ZvrzGmLJ40u2p3HDzNmhHomFurW&ipAddress=${ipCode}`);
-        setIpInfos(response.data)
-      } catch (error) {
-        console.error(error);
-      }
-    }
-     
    getIP()
   }
 
-
-
-  console.log(ipCode, ipInfos)
+  console.log(ipInfos)
 
   
 
@@ -57,15 +59,15 @@ function App() {
         <Flex direction={"row"} justify={"space-between"} w='100%' bg='white' p={6} borderRadius='lg'>
           <Box>
             <h2>IP ADDRESS</h2>
-            <p>{ipInfos.ip}</p>
+            <p>{ipInfos.query}</p>
           </Box>
           <Box className='boxInfos'>
             <h2>LOCATION</h2>
-            <p>{ipInfos.location?.region}, {ipInfos.location?.country} </p>
+            <p>{ipInfos.city}, {ipInfos.region} <br/> {ipInfos.zip} </p>
           </Box>
           <Box className='boxInfos'>
             <h2>TIMEZONE</h2>
-            <p>UTC {ipInfos.location?.timezone}</p>
+            <p>UTC {ipInfos.offset}</p>
           </Box>
           <Box className='boxInfos'>
             <h2>ISP</h2>
