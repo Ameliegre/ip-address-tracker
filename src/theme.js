@@ -30,15 +30,12 @@ export const theme = extendTheme({
         height: 'inherit',
         width:'100%',
       },
-      '.boxInfos': {
-        borderLeft: '1px solid hsl(0, 0%, 59%, 0.41)',
-        paddingLeft: '20px'
-      },
       form: {
         width: '60%',
+        "@media (max-width: 30em)": {
+          width: "100%", 
+        },
       },
-
     }
   }
 });
-

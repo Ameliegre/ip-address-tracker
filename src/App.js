@@ -1,5 +1,6 @@
 import { Image, Input, Flex, InputRightElement, InputGroup, Box, FormLabel } from "@chakra-ui/react"
 import patternDesktop from './images/pattern-bg-desktop.png'
+import patternMobile from './images/pattern-bg-mobile.png'
 import iconBtn from './images/icon-arrow.svg'
 import iconLocation from './images/icon-location.svg'
 import axios from 'axios'
@@ -52,13 +53,14 @@ function App() {
 
   return (
     <Flex direction={"column"} align={"center"} pos="relative" justify={"space-between"}>
-      <Image w='100vw' h='227px' src={patternDesktop} alt='Image de fond' pos='fixed'/>
-      <Flex direction={"column"} align={"center"} width='80%' pos="fixed" top="66px">
+      <Image w='100vw' h='227px' src={patternDesktop} alt='Image de fond' pos='fixed' display={["none", "block"]}/>
+      <Image w='100vw' h='227px' src={patternMobile} alt='Image de fond' pos='fixed' display={["block", "none"]}/>
+      <Flex direction={"column"} align={"center"} width='80%' pos="fixed" top={["16px","48px"]}>
         <h1>IP Address Tracker</h1>
         <form onSubmit={handleSubmit}>
           <InputGroup mb={'30px'}>
-            <FormLabel/>
-            <Input type="text" placeholder="Search for any IP address or domain" bg='white' borderRadius='lg' cursor={"pointer"} value={ipCode} onChange={(e) => setIpCode(e.target.value)}/>
+            <FormLabel display={'none'}/>
+            <Input type="text" placeholder={"Search for any IP address or domain"} bg='white' borderRadius='lg' cursor={"pointer"} value={ipCode} onChange={(e) => setIpCode(e.target.value)}/>
             <InputRightElement width='2.25rem'>
                 <button type="submit">
                   <Image src={iconBtn} alt='icon' ml={'12px'}/>
@@ -66,32 +68,30 @@ function App() {
             </InputRightElement>
           </InputGroup>
         </form>
-        
-        <Flex direction={"row"} justify={"space-between"} w='100%' bg='white' p={6} borderRadius='lg'>
-          <Box>
+        <Flex direction={["column", "row"]} justify={["center","space-between"]} align={['center', 'flex-start']}  w={['100%','fit-content']} bg='white' p={6} borderRadius='lg' columnGap={'10px'}>
+          <Flex direction={["column"]} align={['center', 'stretch']} pl={['0']} pb={['14px', '0']}>
             <h2>IP ADDRESS</h2>
             <p>{ipInfos?.query}</p>
-          </Box>
-          <Box className='boxInfos'>
+          </Flex>
+          <Flex direction={["column"]} align={['center', 'stretch']} pl={['0','20px']} pb={['14px', '0']} borderLeft={['none', '1px solid hsl(0, 0%, 59%, 0.41)']}>
             <h2>LOCATION</h2>
-            <p>{ipInfos?.city}, {ipInfos?.region} <br/> {ipInfos?.zip} </p>
-          </Box>
-          <Box className='boxInfos'>
+            <p>{ipInfos?.city}, {ipInfos?.region} {ipInfos?.zip} </p>
+          </Flex>
+          <Flex direction={["column"]} align={['center', 'stretch']} pl={['0','20px']} pb={['14px', '0']} borderLeft={['none', '1px solid hsl(0, 0%, 59%, 0.41)']}>
             <h2>TIMEZONE</h2>
             <p>UTC {Math.round(timezone)}:00</p>
-          </Box>
-          <Box className='boxInfos'>
+          </Flex>
+          <Flex direction={["column"]} align={['center', 'stretch']} pl={['0','20px']} borderLeft={['none', '1px solid hsl(0, 0%, 59%, 0.41)']}>
             <h2>ISP</h2>
             <p>{ipInfos?.isp}</p>
-          </Box>
+          </Flex>
         </Flex>
       </Flex>
       <Box id='map' bg="gray" w='100%' h='100%' pos='fixed' top='227' zIndex={-9999}>
         {ipInfos && (
-        <MapContainer center={[ipInfos?.lat, ipInfos?.lon]} zoom={13} style={{ height: '100%' }}>
+        <MapContainer center={[ipInfos?.lat, ipInfos?.lon]} zoom={13} zoomControl={false} style={{ height: '100%' }}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <Marker position={[ipInfos?.lat, ipInfos?.lon]} icon={iconPerson} >
-           
           </Marker>
         </MapContainer>
       )}
