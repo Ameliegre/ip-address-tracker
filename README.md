@@ -37,6 +37,6 @@ Install ip-address-tracker with npm
 
 During this project : 
 
-- xx
-- xx
-- xx
+- I learned how to use Chakra ui
+- I also learned how to implement a map into an application
+- I praticed call with a public api
