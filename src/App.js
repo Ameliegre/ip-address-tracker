@@ -22,7 +22,7 @@ export { iconPerson };
 const IP_REGEX = /^(?:\d{1,3}\.){3}\d{1,3}$/;
 
 function App() {
-  const [ipCode, setIpCode] = useState('');
+  const [ipCode, setIpCode] = useState('4.4.4.4');
   const [ipInfos, setIpInfos] = useState(null);
 
   const getIP = async () => {
