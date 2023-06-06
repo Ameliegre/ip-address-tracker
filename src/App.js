@@ -1,43 +1,50 @@
 import { Image, Input, Flex, InputRightElement, InputGroup, Box, FormLabel } from "@chakra-ui/react"
 import patternDesktop from './images/pattern-bg-desktop.png'
 import iconBtn from './images/icon-arrow.svg'
+import iconLocation from './images/icon-location.svg'
 import axios from 'axios'
 import { useState, useEffect } from "react"
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+const iconPerson = new L.Icon({
+    iconUrl: iconLocation,
+    iconRetinaUrl: iconLocation
+});
+
+export { iconPerson };
 
 const IP_REGEX = /^(?:\d{1,3}\.){3}\d{1,3}$/;
 
 function App() {
 
   const [ipCode, setIpCode] = useState('')
-  const [ipInfos, setIpInfos] = useState('')
+  const [ipInfos, setIpInfos] = useState(null)
 
   const getIP = async () => {
-      try {
-        const response = await axios.get(`http://ip-api.com/json/${ipCode}?fields=status,message,continent,region,city,zip,timezone,offset,isp,query`);
-        setIpInfos(response.data)
-      } catch (error) {
-        console.error(error);
-      }
+    try {
+      const response = await axios.get(`http://ip-api.com/json/${ipCode}?fields=status,message,continent,region,city,zip,timezone,offset,isp,query,lon,lat`);
+      setIpInfos(response.data);
+    } catch (error) {
+      console.error(error);
     }
-
+  };
 
   useEffect(() => {
-    getIP()
+    getIP();
   }, []);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const ipResult = IP_REGEX.test(ipCode)
+    e.preventDefault();
+    const ipResult = IP_REGEX.test(ipCode);
 
-    if (!ipResult){
-      return
+    if (!ipResult) {
+      return;
     }
-   getIP()
-  }
-
-  console.log(ipInfos)
-
-  
+    setIpInfos()
+    getIP();
+  };
 
   return (
     <Flex direction={"column"} align={"center"} pos="relative" justify={"space-between"}>
@@ -59,23 +66,32 @@ function App() {
         <Flex direction={"row"} justify={"space-between"} w='100%' bg='white' p={6} borderRadius='lg'>
           <Box>
             <h2>IP ADDRESS</h2>
-            <p>{ipInfos.query}</p>
+            <p>{ipInfos?.query}</p>
           </Box>
           <Box className='boxInfos'>
             <h2>LOCATION</h2>
-            <p>{ipInfos.city}, {ipInfos.region} <br/> {ipInfos.zip} </p>
+            <p>{ipInfos?.city}, {ipInfos?.region} <br/> {ipInfos?.zip} </p>
           </Box>
           <Box className='boxInfos'>
             <h2>TIMEZONE</h2>
-            <p>UTC {ipInfos.offset}</p>
+            <p>UTC {ipInfos?.offset}</p>
           </Box>
           <Box className='boxInfos'>
             <h2>ISP</h2>
-            <p>{ipInfos.isp}</p>
+            <p>{ipInfos?.isp}</p>
           </Box>
         </Flex>
       </Flex>
-      <Box bg="gray" w='100%' h='80%' pos='fixed' bottom='0' zIndex={-9999}></Box>
+      <Box id='map' bg="gray" w='100%' h='100%' pos='fixed' top='227' zIndex={-9999}>
+        {ipInfos && (
+        <MapContainer center={[ipInfos?.lat, ipInfos?.lon]} zoom={13} style={{ height: '100%' }}>
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <Marker position={[ipInfos?.lat, ipInfos?.lon]} icon={iconPerson} >
+           
+          </Marker>
+        </MapContainer>
+      )}
+      </Box>
     </Flex>
   );
 }

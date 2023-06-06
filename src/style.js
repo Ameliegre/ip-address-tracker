@@ -36,7 +36,8 @@ export const theme = extendTheme({
       },
       form: {
         width: '60%',
-      }
+      },
+
     }
   }
 });
