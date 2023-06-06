@@ -46,6 +46,10 @@ function App() {
     getIP();
   };
 
+  const today = new Date();
+  const todayInSeconds = today.getUTCSeconds();
+  const timezone = (todayInSeconds - ipInfos?.offset)/3600
+
   return (
     <Flex direction={"column"} align={"center"} pos="relative" justify={"space-between"}>
       <Image w='100vw' h='227px' src={patternDesktop} alt='Image de fond' pos='fixed'/>
@@ -74,7 +78,7 @@ function App() {
           </Box>
           <Box className='boxInfos'>
             <h2>TIMEZONE</h2>
-            <p>UTC {ipInfos?.offset}</p>
+            <p>UTC {Math.round(timezone)}:00</p>
           </Box>
           <Box className='boxInfos'>
             <h2>ISP</h2>
